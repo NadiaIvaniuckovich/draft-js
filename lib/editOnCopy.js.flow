@@ -27,10 +27,6 @@ function editOnCopy(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   var selection = editorState.getSelection();
 
   const result = editor.props.handleBeforeCopy && editor.props.handleBeforeCopy(editorState, e);
-  if (isEventHandled(result)) {
-    e.preventDefault();
-    return;
-  }
   if (typeof result === 'object') {
     editorState = result;
   }
