@@ -9857,10 +9857,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var selection = editorState.getSelection();
 
 	  var result = editor.props.handleBeforeCopy && editor.props.handleBeforeCopy(editorState, e);
-	  if (isEventHandled(result)) {
-	    e.preventDefault();
-	    return;
-	  }
 	  if (typeof result === 'object') {
 	    editorState = result;
 	  }
