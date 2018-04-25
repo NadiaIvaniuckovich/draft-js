@@ -38,10 +38,6 @@ function editOnCut(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   let scrollPosition;
 
   const result = editor.props.handleBeforeCut && editor.props.handleBeforeCut(editorState, e);
-  if (isEventHandled(result)) {
-    e.preventDefault();
-    return;
-  }
   if (typeof result === 'object') {
     editorState = result;
   }
