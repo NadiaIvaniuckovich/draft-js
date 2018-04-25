@@ -26,13 +26,22 @@ function editOnCopy(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
   var editorState = editor._latestEditorState;
   var selection = editorState.getSelection();
 
+  const result = editor.props.handleBeforeCopy && editor.props.handleBeforeCopy(editorState, e);
+  if (isEventHandled(result)) {
+    e.preventDefault();
+    return;
+  }
+  if (typeof result === 'object') {
+    editorState = result;
+  }
+
   // No selection, so there's nothing to copy.
   if (selection.isCollapsed()) {
     e.preventDefault();
     return;
   }
 
-  editor.setClipboard(getFragmentFromSelection(editor._latestEditorState));
+  editor.setClipboard(getFragmentFromSelection(editorState));
 }
 
 module.exports = editOnCopy;
