@@ -9856,13 +9856,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var editorState = editor._latestEditorState;
 	  var selection = editorState.getSelection();
 
+	  var result = editor.props.handleBeforeCopy && editor.props.handleBeforeCopy(editorState, e);
+	  if (typeof result === 'object') {
+	    editorState = result;
+	  }
+
 	  // No selection, so there's nothing to copy.
 	  if (selection.isCollapsed()) {
 	    e.preventDefault();
 	    return;
 	  }
 
-	  editor.setClipboard(getFragmentFromSelection(editor._latestEditorState));
+	  editor.setClipboard(getFragmentFromSelection(editorState));
 	}
 
 	module.exports = editOnCopy;
@@ -9907,6 +9912,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var selection = editorState.getSelection();
 	  var element = e.target;
 	  var scrollPosition = void 0;
+
+	  var result = editor.props.handleBeforeCut && editor.props.handleBeforeCut(editorState, e);
+	  if (typeof result === 'object') {
+	    editorState = result;
+	  }
 
 	  // No selection, so there's nothing to cut.
 	  if (selection.isCollapsed()) {

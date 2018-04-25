@@ -30,10 +30,15 @@ const getScrollPosition = require('getScrollPosition');
  * styles and entities, for use as an internal paste.
  */
 function editOnCut(editor: DraftEditor, e: SyntheticClipboardEvent<>): void {
-  const editorState = editor._latestEditorState;
+  let editorState = editor._latestEditorState;
   const selection = editorState.getSelection();
   const element = e.target;
   let scrollPosition;
+
+  const result = editor.props.handleBeforeCut && editor.props.handleBeforeCut(editorState, e);
+  if (typeof result === 'object') {
+      editorState = result;
+  }
 
   // No selection, so there's nothing to cut.
   if (selection.isCollapsed()) {
