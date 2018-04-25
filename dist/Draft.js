@@ -9918,10 +9918,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var scrollPosition = void 0;
 
 	  var result = editor.props.handleBeforeCut && editor.props.handleBeforeCut(editorState, e);
-	  if (isEventHandled(result)) {
-	    e.preventDefault();
-	    return;
-	  }
 	  if (typeof result === 'object') {
 	    editorState = result;
 	  }
