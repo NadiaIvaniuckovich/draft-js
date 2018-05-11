@@ -11898,7 +11898,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  var selection = editorState.getSelection();
-	  return EditorState.push(editorState, afterRemoval.set('selectionBefore', selection), selection.isCollapsed() ? 'backspace-character' : 'remove-range');
+	  var newState = EditorState.push(editorState, afterRemoval.set('selectionBefore', selection), selection.isCollapsed() ? 'backspace-character' : 'remove-range');
+
+	  var content = editorState.getCurrentContent();
+	  var key = selection.getAnchorKey();
+	  var offset = selection.getIsBackward() ? selection.getFocusOffset() : selection.getAnchorOffset();
+	  var styles = content.getBlockForKey(key).getInlineStyleAt(selection.isCollapsed() ? offset - 1 : offset);
+	  newState = EditorState.setInlineStyleOverride(newState, styles);
+	  return newState;
 	}
 
 	module.exports = keyCommandPlainBackspace;
