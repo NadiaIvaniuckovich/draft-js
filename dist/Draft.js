@@ -11898,7 +11898,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  var selection = editorState.getSelection();
-	  return EditorState.push(editorState, afterRemoval.set('selectionBefore', selection), selection.isCollapsed() ? 'backspace-character' : 'remove-range');
+	  var newState = EditorState.push(editorState, afterRemoval.set('selectionBefore', selection), selection.isCollapsed() ? 'backspace-character' : 'remove-range');
+
+	  var content = editorState.getCurrentContent();
+	  var key = selection.getAnchorKey();
+	  var offset = selection.getIsBackward() ? selection.getFocusOffset() : selection.getAnchorOffset();
+	  var styles = content.getBlockForKey(key).getInlineStyleAt(selection.isCollapsed() ? offset - 1 : offset);
+	  newState = EditorState.setInlineStyleOverride(newState, styles);
+	  return newState;
 	}
 
 	module.exports = keyCommandPlainBackspace;
@@ -11948,8 +11955,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  var selection = editorState.getSelection();
+	  var newState = EditorState.push(editorState, afterRemoval.set('selectionBefore', selection), selection.isCollapsed() ? 'delete-character' : 'remove-range');
+	  var content = editorState.getCurrentContent();
+	  var key = selection.getAnchorKey();
+	  var offset = selection.getIsBackward() ? selection.getAnchorOffset() : selection.getFocusOffset();
+	  var start = selection.getIsBackward() ? selection.getFocusOffset() : selection.getAnchorOffset();
+	  if (selection.isCollapsed()) {
+	    offset++;
+	  }
+	  var block = content.getBlockForKey(key);
+	  if (block.getCharacterList().size === offset && start === 0) {
+	    var styles = content.getBlockForKey(key).getInlineStyleAt(offset - 1);
+	    newState = EditorState.setInlineStyleOverride(newState, styles);
+	  }
 
-	  return EditorState.push(editorState, afterRemoval.set('selectionBefore', selection), selection.isCollapsed() ? 'delete-character' : 'remove-range');
+	  return newState;
 	}
 
 	module.exports = keyCommandPlainDelete;
